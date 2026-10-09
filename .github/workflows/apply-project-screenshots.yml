@@ -20,8 +20,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --location --retry 2 --max-time 90 'https://at.adobe.com/N1tL4ZNcvI7i56QD' --output "$RUNNER_TEMP/project-screenshots.zip"
-          echo "226e34e8411f89bc4c9b59ece5c10013a6dcc377002d53dda63b76c8903d9e83  $RUNNER_TEMP/project-screenshots.zip" | sha256sum --check
+          curl --fail --location --retry 2 --max-time 90 'https://at.adobe.com/Z8sDORWUkk2Oceja' --output "$RUNNER_TEMP/project-screenshots.zip"
+          echo "a9f288c7c2b052c0e07c3c54e9e2c299b6fd71279215e6d00f1fc1fdd8990ed1  $RUNNER_TEMP/project-screenshots.zip" | sha256sum --check
           python3 -m zipfile -e "$RUNNER_TEMP/project-screenshots.zip" "$RUNNER_TEMP/project-screenshots-update"
           python3 "$RUNNER_TEMP/project-screenshots-update/apply.py" "$GITHUB_WORKSPACE"
       - name: Install isolated browser checks
@@ -63,7 +63,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in $(seq 1 40); do
-            if curl -fsSL --max-time 15 "https://saifworks.vercel.app/?screenshots=$(git rev-parse --short HEAD)" | grep -q 'project-screenshots.css'; then
+            if curl -fsSL --max-time 15 "https://saifworks.vercel.app/?screenshots=$(git rev-parse --short HEAD)" --output "$RUNNER_TEMP/production.html" && grep -q 'project-screenshots.css' "$RUNNER_TEMP/production.html"; then
               exit 0
             fi
             sleep 6
