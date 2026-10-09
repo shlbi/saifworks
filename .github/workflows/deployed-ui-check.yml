@@ -1,0 +1,36 @@
+name: Verify deployed portfolio
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/deployed-ui-check.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install isolated browser test dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix "$RUNNER_TEMP/saifworks-qa" --no-save --package-lock=false playwright
+          echo "PLAYWRIGHT_MODULE=$RUNNER_TEMP/saifworks-qa/node_modules/playwright" >> "$GITHUB_ENV"
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "CHROME_PATH=$(command -v google-chrome)" >> "$GITHUB_ENV"
+          else
+            "$RUNNER_TEMP/saifworks-qa/node_modules/.bin/playwright" install --with-deps chromium
+          fi
+      - name: Check the public production URL without authentication
+        env:
+          BASE_URL: https://saifworks.vercel.app
+        run: node tests/verify-hero.mjs
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: deployed-portfolio-browser-check
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: warn
