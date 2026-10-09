@@ -20,7 +20,7 @@ try{
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Horizontal overflow');
   assert.equal(await page.locator('#sculpture-canvas').count(),0,'Old renderer is still present');
   assert.equal(await page.locator('#motion-toggle').getAttribute('aria-pressed'),'false');
-  for(const [key,title] of [['repot','REPOT'],['parallax','Parallax'],['ghost','Ghost Director'],['wanneesh','Wanneesh']]){
+  for(const [key,title] of [['repot','REPOT'],['parallax','Parallax'],['ghost','Ghost Director']]){
    await page.locator(`#hero-art-board [data-project="${key}"]`).click();
    assert.equal(await page.locator('#dialog-title').innerText(),title);
    if(key==='repot')assert.equal(await page.locator('#project-dialog .dialog-footer a').getAttribute('href'),'https://getrepot.com');
@@ -29,7 +29,7 @@ try{
   await page.keyboard.press('Control+k');await page.locator('#command-input').fill('repot');await page.keyboard.press('Enter');
   assert.equal(await page.locator('#dialog-title').innerText(),'REPOT');await page.keyboard.press('Escape');
   await page.locator('[data-filter="tools"]').click();assert.equal(await page.locator('.project-card:visible').count(),1);
-  await page.locator('[data-filter="all"]').click();assert.equal(await page.locator('.project-card:visible').count(),4);
+  await page.locator('[data-filter="all"]').click();assert.equal(await page.locator('.project-card:visible').count(),3);
   await page.locator('[data-view="list"]').click();assert.match(await page.locator('#projects').getAttribute('class'),/list-view/);
   await page.locator('[data-view="gallery"]').click();
   await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));await page.waitForTimeout(150);
