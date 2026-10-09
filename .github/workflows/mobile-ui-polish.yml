@@ -21,6 +21,7 @@ jobs:
           node --check ui-icons.js
           node --check tools/apply-mobile-polish.cjs
           node tools/apply-mobile-polish.cjs
+          printf '\n@media(max-width:760px){.project-quickstart{margin-top:14px}}\n' >> ui-polish.css
       - name: Install isolated browser checks
         shell: bash
         run: |
@@ -52,7 +53,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm tools/apply-mobile-polish.cjs .github/workflows/mobile-ui-polish.yml
-          git add index.html README.md
+          git add index.html README.md ui-polish.css
           git commit -m 'fix: use vector icons on mobile and explain the Parallax evidence-mapping prototype'
           git push origin HEAD:main
           git rev-parse HEAD > test-results/published-commit.txt
@@ -61,7 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in $(seq 1 60); do
-            if curl -fsSL --max-time 20 "https://saifworks.vercel.app/?ui-check=$GITHUB_RUN_ID" | grep -q 'saifworks-ui-release'; then exit 0; fi
+            if curl -fsSL --max-time 20 "https://saifworks.vercel.app/?ui-check=$GITHUB_RUN_ID" | grep 'saifworks-ui-release' >/dev/null; then exit 0; fi
             sleep 5
           done
           echo 'Production has not served the updated source yet'; exit 1
@@ -74,7 +75,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if curl -fsSL --max-time 25 https://saifworks.com | grep -q 'saifworks-ui-release'; then
+          if curl -fsSL --max-time 25 https://saifworks.com | grep 'saifworks-ui-release' >/dev/null; then
             BASE_URL=https://saifworks.com TEST_PHASE=custom-domain node tests/verify-mobile-icons.mjs
           else
             echo 'The custom domain did not serve the updated page during this check.' | tee test-results/custom-domain-note.txt
