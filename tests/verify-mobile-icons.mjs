@@ -22,7 +22,7 @@ async function clickVisible(page,selector){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await locator.click();
 }
-async function diagnostics(page){return page.evaluate(()=>({scrollX,scrollY,innerWidth,innerHeight,clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,visualViewport:visualViewport?{width:visualViewport.width,height:visualViewport.height,scale:visualViewport.scale,offsetTop:visualViewport.offsetTop,pageTop:visualViewport.pageTop}:null,cards:[...document.querySelectorAll('.project-art')].map(e=>{const r=e.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;return{id:e.dataset.project,rect:r.toJSON(),hit:document.elementFromPoint(x,y)?.outerHTML.slice(0,200)}})}))}
+async function diagnostics(page){return page.evaluate(()=>({scrollX,scrollY,innerWidth,innerHeight,clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,visualViewport:visualViewport?{width:visualViewport.width,height:visualViewport.height,scale:visualViewport.scale,offsetTop:visualViewport.offsetTop,pageTop:visualViewport.pageTop}:null,overflow:[...document.body.querySelectorAll('*')].filter(e=>e.getBoundingClientRect().right>document.documentElement.clientWidth+1&&!e.closest('svg,script,style')).slice(0,25).map(e=>({tag:e.tagName,class:e.className,rect:e.getBoundingClientRect().toJSON()})),cards:[...document.querySelectorAll('.project-art')].map(e=>{const r=e.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;return{id:e.dataset.project,rect:r.toJSON(),hit:document.elementFromPoint(x,y)?.outerHTML.slice(0,200)}})}))}
 try{
  for(const [engine,width,height] of targets){
   console.log(`CHECK ${phase} ${engine} ${width}x${height}`);
@@ -43,7 +43,7 @@ try{
    assert.equal(await page.locator('.corner-arrow svg.ui-icon').count(),3);
    assert.equal(await page.locator('img[src*="project-screenshots"]').count(),0);
    assert.deepEqual(screenshotRequests,[],'Screenshots downloaded before click');
-   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Page horizontal overflow');
+   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),'Page horizontal overflow');
    assert.equal(await page.locator('.project-card [data-project="parallax"] .globe-large').count(),1,'Original card art missing');
    const stars=await page.locator('.ribbon .asterisk .ui-icon').first().boundingBox();assert(stars.width>15&&stars.height>15);
    await page.evaluate(()=>window.scrollTo({top:document.querySelector('#work').getBoundingClientRect().top+scrollY-56,behavior:'instant'}));

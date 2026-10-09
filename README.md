@@ -9,7 +9,7 @@ Interactive single-page portfolio featuring an art-directed portrait collage, pr
 ### Featured projects
 
 - **REPOT** — [getrepot.com](https://getrepot.com) — feature transfer between repositories.
-- **Parallax** — [live intelligence platform](https://parallax-steel-chi.vercel.app/) (the portfolio's visualization is illustrative).
+- **Parallax** — [interactive evidence-mapping prototype](https://parallax-steel-chi.vercel.app/): explore relationships, inspect sources, and replay a fictional case. Live research integrations and model-backed analysis are planned.
 - **Ghost Director** — AI-assisted film creation concept.
 
 ## Run locally
@@ -45,3 +45,9 @@ Tests verify asset loading, viewport bounds, project dialogs, the REPOT launch U
 ## Notes
 
 The in-page demos are simulations, not production product integrations. Live project links should only be added after launch.
+
+## Consistent mobile icons
+
+Interface symbols use inline SVG paths, not platform emoji glyphs. `ui-icons.js` shares the icon registry between source markup and dynamic dialogs/controls. The playground arrow is drawn with canvas paths. Project screenshots still appear only after opening a project.
+
+Run `node tests/verify-mobile-icons.mjs` with Playwright Chromium and WebKit installed to check vectors, narrow layouts, prototype copy, dialog navigation, and the screenshot-only-after-click contract.
