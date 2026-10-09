@@ -21,7 +21,19 @@ jobs:
           node --check ui-icons.js
           node --check tools/apply-mobile-polish.cjs
           node tools/apply-mobile-polish.cjs
-          printf '\n@media(max-width:760px){.project-quickstart{margin-top:14px}}\n' >> ui-polish.css
+          cat >> ui-polish.css <<'CSS'
+          /* The 835px artboard is scaled visually; contain its unscaled overflow
+             so it cannot enlarge a phone's layout viewport or offset hit targets. */
+          @media(max-width:760px){.workshop{overflow:clip}.project-quickstart{margin-top:14px}}
+          CSS
+          node <<'JS'
+          const fs=require('node:fs');
+          const file='tests/verify-mobile-icons.mjs';
+          let source=fs.readFileSync(file,'utf8');
+          source=source.replace('document.documentElement.scrollWidth<=innerWidth+1','document.documentElement.scrollWidth<=document.documentElement.clientWidth+1');
+          source=source.replace('cards:[...document.querySelectorAll',"overflow:[...document.body.querySelectorAll('*')].filter(e=>e.getBoundingClientRect().right>document.documentElement.clientWidth+1&&!e.closest('svg,script,style')).slice(0,25).map(e=>({tag:e.tagName,class:e.className,rect:e.getBoundingClientRect().toJSON()})),cards:[...document.querySelectorAll");
+          fs.writeFileSync(file,source);
+          JS
       - name: Install isolated browser checks
         shell: bash
         run: |
@@ -53,7 +65,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm tools/apply-mobile-polish.cjs .github/workflows/mobile-ui-polish.yml
-          git add index.html README.md ui-polish.css
+          git add index.html README.md ui-polish.css tests/verify-mobile-icons.mjs
           git commit -m 'fix: use vector icons on mobile and explain the Parallax evidence-mapping prototype'
           git push origin HEAD:main
           git rev-parse HEAD > test-results/published-commit.txt
