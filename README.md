@@ -9,9 +9,8 @@ Interactive single-page portfolio featuring an art-directed portrait collage, pr
 ### Featured projects
 
 - **REPOT** — [getrepot.com](https://getrepot.com) — feature transfer between repositories.
-- **Parallax** — intelligence interface (in development; demo in portfolio is illustrative).
+- **Parallax** — [live intelligence platform](https://parallax-steel-chi.vercel.app/) (the portfolio's visualization is illustrative).
 - **Ghost Director** — AI-assisted film creation concept.
-- **Wanneesh** — truck services platform concept for Jordan.
 
 ## Run locally
 
