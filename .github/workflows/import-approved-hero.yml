@@ -1,0 +1,32 @@
+name: Import approved hero artwork
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/import-approved-hero.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Save approved artwork as permanent repository assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          curl --fail --location --retry 2 --max-time 60 'https://at.adobe.com/Jb89uG3PdSy4o7SX' --output assets/hero-collage.webp
+          curl --fail --location --retry 2 --max-time 60 'https://at.adobe.com/A8Q2sMOmNaoz48dS' --output assets/hero-knot.webp
+          echo '1a54359e89e3e9d401bbf54037fefcc531ef52b84f3632ad11dd55f4de11121c  assets/hero-collage.webp' | sha256sum --check
+          echo 'aa6ec021790e179b32f90c032b0e469d69b0cf80224e8deea3fb234a6290d371  assets/hero-knot.webp' | sha256sum --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/hero-collage.webp assets/hero-knot.webp
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'fix: preserve approved portrait and opaque sculptural artwork'
+          git pull --rebase origin main
+          git push origin HEAD:main
