@@ -1,0 +1,20 @@
+/* Inline paths inherit the surrounding design, never a platform emoji font. */
+svg.ui-icon{display:inline-block;width:1em;height:1em;min-width:1em;flex:0 0 auto;vertical-align:-.14em;overflow:visible;pointer-events:none;font-size:inherit;line-height:1}
+.ribbon .asterisk{display:inline-flex;align-items:center;justify-content:center}
+.ribbon .asterisk .ui-icon{width:26px;height:26px}
+.close-dialog .ui-icon{width:16px;height:16px}
+.project-dialog .dialog-footer a,.screenshot-meta a{display:inline-flex;align-items:center;gap:.5em}
+.project-quickstart{display:flex;align-items:center;flex-wrap:wrap;gap:12px 18px;margin:0 0 26px}
+.project-launch{display:inline-flex;align-items:center;justify-content:center;gap:16px;min-height:44px;padding:13px 18px;background:var(--ink);color:var(--paper);border-radius:4px;font-size:13px;font-weight:500;transition:background .2s}
+.project-launch:hover{background:var(--blue)}
+.project-quickstart p{margin:0;max-width:245px;color:#697260;font-size:12px;line-height:1.65}
+#project-dialog .case-workflow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin:28px 0 22px}
+#project-dialog .case-step{min-width:0;border-top:1px solid var(--line);padding-top:16px}
+#project-dialog .case-step .step-number{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:#798367}
+#project-dialog .case-step h3{margin:10px 0 8px;font-family:var(--sans);font-size:14px;line-height:1.4;font-weight:600;color:var(--ink);text-transform:none}
+#project-dialog .case-step p{margin:0;font-size:12px;line-height:1.8;color:#68715f}
+#project-dialog .case-example{border-left:2px solid #869565;padding:13px 16px;margin:0 0 17px;background:#dfe4d144;font-size:12px;line-height:1.85;color:#68715f}
+#project-dialog .case-example strong{color:var(--ink);font-weight:600}
+#project-dialog .prototype-note{margin:0 0 26px;font-family:var(--mono);font-size:10px;line-height:1.8;color:#697260}
+@media(max-width:760px){.ribbon .asterisk .ui-icon{width:21px;height:21px}.project-quickstart{gap:9px;margin:0 0 23px}.project-launch{width:100%;font-size:12px;min-height:44px}.project-quickstart p{max-width:none;font-size:11px}#project-dialog .case-workflow{grid-template-columns:1fr;gap:18px;margin-top:25px}#project-dialog .case-step{padding-top:12px}#project-dialog .case-step h3{margin:7px 0 6px}#project-dialog .case-example{font-size:12px}#project-dialog .prototype-note{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.project-launch{transition:none}}
